@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>项目进度</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="项目列表">
+      <header class="sidebar-header">
+        <div class="sidebar-title-row">
+          <button type="button" class="icon-btn" id="toggle-all" title="展开/折叠" aria-label="展开或折叠全部">
+            <svg class="chevron" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <h1 class="sidebar-brand">项目进度</h1>
+          <div class="sidebar-header-actions">
+            <button type="button" class="icon-btn" id="add-top" title="新建项目" aria-label="新建项目">
+              <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                <path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="view-tabs" role="tablist">
+          <button type="button" class="view-tab is-active" data-view="active" role="tab" aria-selected="true">进行中</button>
+          <button type="button" class="view-tab" data-view="archived" role="tab" aria-selected="false">已归档</button>
+        </div>
+      </header>
+
+      <div id="tree" class="tree" role="tree"></div>
+      <p id="empty" class="empty" hidden>暂无项目。点击右上角 + 新建。</p>
+    </aside>
+
+    <main class="detail" aria-live="polite">
+      <header class="detail-toolbar" id="detail-toolbar">
+        <div class="detail-toolbar-actions" id="toolbar-actions">
+          <button type="button" class="toolbar-btn" id="btn-messages" title="消息" aria-label="打开消息">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 6.5h15v9.5a1.5 1.5 0 01-1.5 1.5H9l-3.5 2.5V17.5H6a1.5 1.5 0 01-1.5-1.5V6.5z"/>
+              <path d="M8.5 10.5h7M8.5 13.5h4.5"/>
+            </svg>
+            <span class="toolbar-badge" id="messages-badge" hidden></span>
+          </button>
+          <button type="button" class="toolbar-btn" id="btn-calendar" title="日历" aria-label="打开日历">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3.5" y="5" width="17" height="15.5" rx="2"/>
+              <path d="M8 3.5v3M16 3.5v3M3.5 10h17"/>
+            </svg>
+          </button>
+          <button type="button" class="toolbar-btn toolbar-btn-plus" id="btn-today" title="今日记录 Today's 0.1" aria-label="编辑今日记录">
+            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div id="detail" class="detail-body">
+        <p class="detail-placeholder">选择一个项目查看详情，或点击右上角 + 记录 Today's 0.1</p>
+      </div>
+    </main>
+
+    <aside class="right-sidebar history-sidebar" id="history-sidebar" aria-label="历史 Today's 0.1" hidden>
+      <header class="history-header">
+        <h2 class="history-title">历史记录</h2>
+        <button type="button" class="icon-btn" id="history-collapse" title="收起" aria-label="收起历史栏">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3l5 5-5 5"/>
+          </svg>
+        </button>
+      </header>
+      <div id="history-list" class="history-list" role="list"></div>
+      <p id="history-empty" class="history-empty" hidden>暂无历史记录</p>
+    </aside>
+
+    <aside class="right-sidebar messages-sidebar" id="messages-sidebar" aria-label="AI 对话" hidden>
+      <header class="history-header">
+        <h2 class="history-title">AI 对话</h2>
+        <button type="button" class="icon-btn" id="messages-collapse" title="收起" aria-label="收起消息栏">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3l5 5-5 5"/>
+          </svg>
+        </button>
+      </header>
+      <div id="messages-list" class="messages-list" role="log" aria-live="polite"></div>
+      <div class="chat-presets" id="chat-presets">
+        <button type="button" class="chat-preset" data-preset="给我讲讲我最近的进展">给我讲讲我最近的进展</button>
+        <button type="button" class="chat-preset" data-preset="最近还有什么任务？">最近还有什么任务？</button>
+      </div>
+      <form id="chat-form" class="chat-form">
+        <label class="sr-only" for="chat-input">输入消息</label>
+        <textarea id="chat-input" rows="2" placeholder="输入消息，Enter 发送，Shift+Enter 换行" maxlength="8000"></textarea>
+        <button type="submit" class="btn btn-primary chat-send" id="chat-send">发送</button>
+      </form>
+    </aside>
+  </div>
+
+  <div id="menu" class="menu" hidden role="menu"></div>
+
+  <dialog id="prompt-dialog" class="dialog">
+    <form method="dialog" id="prompt-form">
+      <h2 id="prompt-title" class="dialog-title">重命名</h2>
+      <label class="sr-only" for="prompt-input">名称</label>
+      <input id="prompt-input" type="text" maxlength="120" required />
+      <div class="dialog-actions">
+        <button type="submit" class="btn btn-primary" value="ok">确定</button>
+        <button type="submit" class="btn btn-ghost" value="cancel" formnovalidate>取消</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="dialog">
+    <form method="dialog" id="confirm-form">
+      <h2 id="confirm-title" class="dialog-title">确认</h2>
+      <p id="confirm-message" class="dialog-message"></p>
+      <div class="dialog-actions">
+        <button type="submit" class="btn btn-primary" value="ok" id="confirm-ok">确定</button>
+        <button type="submit" class="btn btn-ghost" value="cancel" formnovalidate>取消</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="vendor/markdown.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
